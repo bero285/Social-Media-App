@@ -32,10 +32,9 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
     } else {
       setFriendState(false);
     }
-    console.log(friendState);
+   
   }, [effectFreidnState]);
 
-  
   useEffect(() => {
     if (friends) {
       if (friends.find((friend) => friend._id === friendId)) {
@@ -46,7 +45,7 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
     } else {
       setFriendState(false);
     }
-    console.log(friendState);
+ 
   }, []);
   // const isFriend = friends
   //   ? friends.find((friend) => friend._id === friendId)
@@ -65,7 +64,7 @@ const Friend = ({ friendId, name, subtitle, userPicturePath }) => {
   const isMe = Boolean(_id === friendId);
   const patchFriend = async () => {
     const response = await fetch(
-      `http://localhost:3001/users/${_id}/${friendId}`,
+      `https://social-media-app-rmll.onrender.com/users/${_id}/${friendId}`,
       {
         method: "PATCH",
         headers: {

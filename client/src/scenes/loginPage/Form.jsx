@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   Button,
@@ -16,7 +16,7 @@ import { setLogin } from "state";
 import Dropzone from "react-dropzone";
 import FlexBetween from "../../components/FlexBetween";
 import { Password } from "@mui/icons-material";
-
+// import loadingGif from "../../../public/loading.gif";
 const registerSchema = yup.object().shape({
   firstName: yup.string().required("required"),
   lastName: yup.string().required("required"),
@@ -56,6 +56,8 @@ const Form = () => {
   const isLogin = pageType === "login";
   const isRegister = pageType === "register";
   const [image, setImage] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [logFail, setLogFail] = useState(false);
   const register = async (values, onSubmitProps) => {
     // this allows us to send form info with image
     const formData = new FormData();
@@ -66,7 +68,7 @@ const Form = () => {
     formData.append("picturePath", image.name);
     formData.append("picture", image);
     const savedUserResponse = await fetch(
-      "http://localhost:3001/auth/register",
+      "https://social-media-app-rmll.onrender.com/auth/register",
       {
         method: "POST",
         body: formData,
@@ -81,22 +83,39 @@ const Form = () => {
   };
 
   const login = async (values, onSubmitProps) => {
-    const loggedInResponse = await fetch("http://localhost:3001/auth/login", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(values),
-    });
-    const loggedIn = await loggedInResponse.json();
-    onSubmitProps.resetForm();
+    try {
+      setLoading(true);
+      const loggedInResponse = await fetch("https://social-media-app-rmll.onrender.com/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(values),
+      });
 
-    if (loggedIn) {
-      dispatch(
-        setLogin({
-          user: loggedIn.user,
-          token: loggedIn.token,
-        })
-      );
-      navigate("/home");
+      if (!loggedInResponse.ok) {
+        return (
+          setLogFail(true),
+          setTimeout(() => {
+            return setLogFail(false);
+          }, 5000)
+        );
+      }
+
+      const loggedIn = await loggedInResponse.json();
+      onSubmitProps.resetForm();
+
+      if (loggedIn) {
+        dispatch(
+          setLogin({
+            user: loggedIn.user,
+            token: loggedIn.token,
+          })
+        );
+        navigate("/home");
+      } else {
+      }
+    } catch (error) {
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -130,6 +149,22 @@ const Form = () => {
               "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
             }}
           >
+            <Box display="flex" flexDirection="column">
+              {loading ? (
+                <img
+                  style={{
+                    width: "100px",
+                    height: "100px",
+                  }}
+                  src="https://www.ivymount.org/wp-content/themes/fathom/preview.gif"
+                />
+              ) : null}
+              {logFail ? (
+                <Typography width="200px" color="red">
+                  Incorrect password or email
+                </Typography>
+              ) : null}
+            </Box>
             {isRegister && (
               <>
                 <TextField
