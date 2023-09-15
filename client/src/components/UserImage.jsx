@@ -11,7 +11,7 @@ const UserImage = ({ image, size = "60px" }) => {
           height: size,
         }}
         alt="user"
-        src={`https://social-media-app-rmll.onrender.com/assets/${image}`}
+        src={`random-link/assets/${image}`}
       />
     </Box>
   );

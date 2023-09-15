@@ -16,7 +16,7 @@ const ProfilePage = () => {
   const isMyProfile = Boolean(_id === userId);
   const isNonMobileScreen = useMediaQuery("(min-width:1000px)");
   const getUser = async () => {
-    const response = await fetch(`https://social-media-app-rmll.onrender.com/users/${userId}`, {
+    const response = await fetch(`random-link/users/${userId}`, {
       method: "GET",
       headers: { Authorization: `Bearer ${token}` },
     });

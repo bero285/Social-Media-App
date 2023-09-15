@@ -71,7 +71,7 @@ const Form = () => {
       formData.append("picturePath", image.name);
       formData.append("picture", image);
       const savedUserResponse = await fetch(
-        "https://social-media-app-rmll.onrender.com/auth/register",
+        "random-link/auth/register",
         {
           method: "POST",
           body: formData,
@@ -93,7 +93,7 @@ const Form = () => {
     try {
       setLoading(true);
       const loggedInResponse = await fetch(
-        "https://social-media-app-rmll.onrender.com/auth/login",
+        "random-link/auth/login",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

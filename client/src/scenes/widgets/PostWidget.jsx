@@ -48,7 +48,7 @@ const PostWidget = ({
   const primary = palette.primary.main;
 
   const patchLike = async () => {
-    const response = await fetch(`https://social-media-app-rmll.onrender.com/posts/${postId}/like`, {
+    const response = await fetch(`random-link/posts/${postId}/like`, {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${token}`,

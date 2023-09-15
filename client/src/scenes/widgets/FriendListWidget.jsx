@@ -16,7 +16,7 @@ const FriendListWidget = ({ userId, myId }) => {
 
   const getFriends = async () => {
     const response = await fetch(
-      `https://social-media-app-rmll.onrender.com/users/${userId}/friends`,
+      `random-link/users/${userId}/friends`,
       {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
