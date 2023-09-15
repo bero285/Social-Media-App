@@ -58,38 +58,48 @@ const Form = () => {
   const [image, setImage] = useState("");
   const [loading, setLoading] = useState(false);
   const [logFail, setLogFail] = useState(false);
+  const [regLoading, setRegLoading] = useState(false);
   const register = async (values, onSubmitProps) => {
     // this allows us to send form info with image
-    const formData = new FormData();
+    try {
+      setRegLoading(true);
+      const formData = new FormData();
 
-    for (let value in values) {
-      formData.append(value, values[value]);
-    }
-    formData.append("picturePath", image.name);
-    formData.append("picture", image);
-    const savedUserResponse = await fetch(
-      "https://social-media-app-rmll.onrender.com/auth/register",
-      {
-        method: "POST",
-        body: formData,
+      for (let value in values) {
+        formData.append(value, values[value]);
       }
-    );
-    const savedUser = await savedUserResponse.json();
-    onSubmitProps.resetForm();
+      formData.append("picturePath", image.name);
+      formData.append("picture", image);
+      const savedUserResponse = await fetch(
+        "https://social-media-app-rmll.onrender.com/auth/register",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+      const savedUser = await savedUserResponse.json();
+      onSubmitProps.resetForm();
 
-    if (savedUser) {
-      setPageType("login");
+      if (savedUser) {
+        setPageType("login");
+      }
+    } catch (error) {
+    } finally {
+      setRegLoading(false);
     }
   };
 
   const login = async (values, onSubmitProps) => {
     try {
       setLoading(true);
-      const loggedInResponse = await fetch("https://social-media-app-rmll.onrender.com/auth/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(values),
-      });
+      const loggedInResponse = await fetch(
+        "https://social-media-app-rmll.onrender.com/auth/login",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(values),
+        }
+      );
 
       if (!loggedInResponse.ok) {
         return (
@@ -149,22 +159,25 @@ const Form = () => {
               "& > div": { gridColumn: isNonMobile ? undefined : "span 4" },
             }}
           >
-            <Box display="flex" flexDirection="column">
-              {loading ? (
-                <img
-                  style={{
-                    width: "100px",
-                    height: "100px",
-                  }}
-                  src="https://www.ivymount.org/wp-content/themes/fathom/preview.gif"
-                />
-              ) : null}
-              {logFail ? (
-                <Typography width="200px" color="red">
-                  Incorrect password or email
-                </Typography>
-              ) : null}
-            </Box>
+            {!isRegister ? (
+              <Box display="flex" flexDirection="column">
+                {loading ? (
+                  <img
+                    style={{
+                      width: "100px",
+                      height: "100px",
+                    }}
+                    src="https://www.ivymount.org/wp-content/themes/fathom/preview.gif"
+                  />
+                ) : null}
+                {logFail ? (
+                  <Typography width="200px" color="red">
+                    Incorrect password or email
+                  </Typography>
+                ) : null}
+              </Box>
+            ) : null}
+
             {isRegister && (
               <>
                 <TextField
@@ -270,6 +283,19 @@ const Form = () => {
               sx={{ gridColumn: "span 4" }}
             />
           </Box>
+          {isRegister ? (
+            <Box display="flex" width="100%" justifyContent="center">
+              {regLoading ? (
+                <img
+                  style={{
+                    width: "100px",
+                    height: "100px",
+                  }}
+                  src="https://www.ivymount.org/wp-content/themes/fathom/preview.gif"
+                />
+              ) : null}
+            </Box>
+          ) : null}
 
           {/* BUTTONS */}
           <Box>
@@ -277,7 +303,7 @@ const Form = () => {
               fullWidth
               type="submit"
               sx={{
-                m: "2rem 0",
+                m: !regLoading ? "2rem 0" : "0rem 0",
                 p: "1rem",
                 backgroundColor: palette.primary.main,
                 color: palette.background.alt,
